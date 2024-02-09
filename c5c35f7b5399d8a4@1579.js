@@ -1,6 +1,6 @@
 // https://observablehq.com/@ryshackleton/us-county-basemap@1579
 function _1(md){return(
-md`# US County Basemaps
+md`# US County Basemap
 
 Builds a zoomable US map with states and counties with the following svg structure:
   	- svg
