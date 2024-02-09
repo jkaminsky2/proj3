@@ -1,14 +1,40 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<title>US County Basemap</title>
-<link rel="stylesheet" type="text/css" href="./inspector.css">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>US County Basemap</title>
+    <link rel="stylesheet" type="text/css" href="./inspector.css">
+    <!-- Include D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Include map.js -->
+    <script type="module" src="./map.js" defer></script>
+</head>
 <body>
-<script type="module">
+    <!-- Your existing script for importing and using index.js -->
+    <script type="module">
+        import define from "./index.js";
+        import { Runtime, Inspector } from "./runtime.js";
 
-import define from "./index.js";
-import {Runtime, Library, Inspector} from "./runtime.js";
+        const runtime = new Runtime();
+        const main = runtime.module(define, Inspector.into(document.body));
+    </script>
 
-const runtime = new Runtime();
-const main = runtime.module(define, Inspector.into(document.body));
+    <script type="module">
+        // Import buildMap function from map.js
+        import { buildMap } from "./map.js";
 
-</script>
+        // Define your data representing states and counties
+        const data = {
+            states: [
+                // Data for states
+            ],
+            counties: [
+                // Data for counties
+            ]
+        };
+
+        // Call the buildMap function with the data
+        buildMap(data);
+    </script>
+</body>
+</html>
