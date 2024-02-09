@@ -207,33 +207,6 @@ class UnitedStatesChoropleth {
         path: this.path,
       });
   }
-  
-  _buildStateBoundaries() {
-    const {
-      css,
-      usTopology,
-    } = this.props;
-    
-    this.selections.stateBoundaries = UnitedStatesChoropleth._buildPathInGroup(
-      {
-        selection: this.selections.stateGroup.selectAll('g'),
-        data: topojson.feature(usTopology, usTopology.objects.states).features,
-        idFunction: this.stateOrCountyID.bind(this),
-        groupClassName: this.stateClassName.bind(this),
-        pathClassName: css.stateBoundary,
-        path: this.path,
-      });
-  }
-const states = g.append("g")
-      .attr("fill", "#444")
-      .attr("cursor", "pointer")
-    .selectAll("path")
-    .data(topojson.feature(us, us.objects.states).features)
-    .join("path")
-      .on("click", clicked)
-      .attr("d", path);
-states.append("title")
-      .text(d => d.properties.name);
 
 function clicked(event, d) {
     const [[x0, y0], [x1, y1]] = path.bounds(d);
