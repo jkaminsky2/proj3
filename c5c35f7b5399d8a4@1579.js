@@ -1,6 +1,6 @@
 // https://observablehq.com/@ryshackleton/us-county-basemap@1579
 function _1(md){return(
-md`# US County Basemap
+md`# US County Basemaps
 
 Builds a zoomable US map with states and counties with the following svg structure:
   	- svg
@@ -223,6 +223,31 @@ class UnitedStatesChoropleth {
         pathClassName: css.stateBoundary,
         path: this.path,
       });
+  }
+const states = g.append("g")
+      .attr("fill", "#444")
+      .attr("cursor", "pointer")
+    .selectAll("path")
+    .data(topojson.feature(us, us.objects.states).features)
+    .join("path")
+      .on("click", clicked)
+      .attr("d", path);
+states.append("title")
+      .text(d => d.properties.name);
+
+function clicked(event, d) {
+    const [[x0, y0], [x1, y1]] = path.bounds(d);
+    event.stopPropagation();
+    states.transition().style("fill", null);
+    d3.select(this).transition().style("fill", "red");
+    svg.transition().duration(750).call(
+      zoom.transform,
+      d3.zoomIdentity
+        .translate(width / 2, height / 2)
+        .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
+        .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
+      d3.pointer(event, svg.node())
+    );
   }
 
 _buildMouseOvers() {
