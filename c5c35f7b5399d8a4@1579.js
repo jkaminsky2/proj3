@@ -1,6 +1,6 @@
 // https://observablehq.com/@ryshackleton/us-county-basemap@1579
 function _1(md){return(
-md`# US County Basemap
+md`# US County Basemaps
 
 Builds a zoomable US map with states and counties with the following svg structure:
   	- svg
@@ -224,8 +224,8 @@ class UnitedStatesChoropleth {
         path: this.path,
       });
   }
-  
-  _buildMouseOvers() {
+
+_buildMouseOvers() {
     const {
       css,
       countyMouseOverFunction,
@@ -233,28 +233,38 @@ class UnitedStatesChoropleth {
       countyMouseMoveFunction,
       countyOnClickFunction,
     } = this.props;
+    const self = this; // Store reference to `this` for use inside event listeners
     this.selections.countyBoundaries
-      .on('mouseover', (loc) => {
-      	const stateClass = this.stateClassName(loc);
-      	this.selections.stateGroup.select(`.${stateClass} path`)
+      .on('mouseover', function(loc) {
+        const stateClass = self.stateClassName(loc);
+        self.selections.stateGroup.select(`.${stateClass} path`)
           .classed('highlight_border', true);
-        this.selections.countyGroup.select(`#${this.stateOrCountyID(loc)} path`)
-      	  .classed('highlight_fill', true);
-      	countyMouseOverFunction(loc);
-    })
-      .on('mousemove', (loc) => {
-      	countyMouseMoveFunction(loc);
-    })
-      .on('mouseout', (loc) => {
-      	const stateClass = this.stateClassName(loc);
-      	this.selections.stateGroup.select(`.${stateClass} path`)
-           .classed('highlight_border', false);
-        this.selections.countyGroup.select(`#${this.stateOrCountyID(loc)} path`)
-      	  .classed('highlight_fill', false);
-      	countyMouseOutFunction(loc);
-    })
-    .on('click', countyOnClickFunction);
-  }
+        self.selections.countyGroup.select(`#${self.stateOrCountyID(loc)} path`)
+          .classed('highlight_fill', true);
+        countyMouseOverFunction(loc);
+        // Show county name when mouse is over the county
+        const countyName = loc.location_name;
+        // Append text element for county name
+        self.selections.svg.append('text')
+          .attr('class', 'county-label')
+          .attr('x', self.path.centroid(loc)[0])
+          .attr('y', self.path.centroid(loc)[1])
+          .text(countyName);
+      })
+      .on('mousemove', countyMouseMoveFunction)
+      .on('mouseout', function(loc) {
+        const stateClass = self.stateClassName(loc);
+        self.selections.stateGroup.select(`.${stateClass} path`)
+          .classed('highlight_border', false);
+        self.selections.countyGroup.select(`#${self.stateOrCountyID(loc)} path`)
+          .classed('highlight_fill', false);
+        countyMouseOutFunction(loc);
+        // Remove county name when mouse moves out of the county
+        self.selections.svg.selectAll('.county-label').remove();
+      })
+      .on('click', countyOnClickFunction);
+}
+
   
   _buildLegend() {
     const {
