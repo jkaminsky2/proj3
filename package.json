@@ -1,0 +1,14 @@
+{
+  "name": "@ryshackleton/us-county-basemap",
+  "main": "c5c35f7b5399d8a4@1579.js",
+  "version": "1579.0.0",
+  "homepage": "https://observablehq.com/@ryshackleton/us-county-basemap",
+  "author": {
+    "name": "Ryan Shackleton",
+    "url": "https://observablehq.com/@ryshackleton"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
